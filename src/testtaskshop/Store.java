@@ -20,7 +20,7 @@ public class Store implements TimeAndDateListener {
     private static final int WEEKEND_MARKUP = 15;
     private static final int TWO_ITEMS_MARKUP = 7;
 
-    private static final int MINIMUM_QUANTITY_OF_GOODS = 10;
+    private static final int MINIMUM_QUANTITY_OF_GOODS = 30;
     private static final int PURCHASE = 150;
 
     private List<Drink> drinkList;
@@ -77,8 +77,6 @@ public class Store implements TimeAndDateListener {
      */
     @Override
     public void working_day() {
-
-        checkAvailability();
         int number_of_customers = 1 + (int) (Math.random() * 10);
         System.out.println("Пришло " + number_of_customers + " покупателей.");
         for (int i = 1; i <= number_of_customers; i++) {
@@ -87,23 +85,6 @@ public class Store implements TimeAndDateListener {
         }
     }
 
-    /**
-     * If amount of all goods is 0
-     */
-    private void checkAvailability() {
-        drinkList.forEach((d) -> {
-            if (d.isOver()) {
-                empList.add(d);
-            }
-        });
-        if (empList.size() == drinkList.size()) {
-            System.out.println("На складе кончились все напитки, срочная дозакупка");
-            drinkList.forEach((d) -> {
-                after_sale_of_goods(d);
-            });
-        }
-
-    }
 
     /**
      * Customers purchase from 0 to 10 units of random goods.
@@ -181,8 +162,7 @@ public class Store implements TimeAndDateListener {
      */
     private int find_item() {
         int what_item = 0 + (int) (Math.random() * drinkList.size());
-        if (drinkList.get(what_item).getAmount() == 0 && !drinkList.get(what_item).isOver()) {
-            drinkList.get(what_item).setIsOver(true);
+        if (drinkList.get(what_item).getAmount() == 0) {
             return find_item();
         } else {
             return what_item;
@@ -223,7 +203,7 @@ public class Store implements TimeAndDateListener {
             int amount = drink.getAmount();
             amount += PURCHASE;
             drink.setAmount(amount);
-            drink.setIsOver(false);
+  
 
             int how_many_times_is_bought = drink.getHow_many_times_is_bought();
             how_many_times_is_bought += PURCHASE;

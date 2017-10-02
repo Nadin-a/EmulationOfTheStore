@@ -22,7 +22,7 @@ class Drink {
     private int current_markup;
     private int how_much_is_sold;
     private int how_many_times_is_bought;
-    private boolean isOver = false;
+
 
     public Drink() {
         this.how_much_is_sold = 0;
@@ -107,14 +107,6 @@ class Drink {
 
     public void setHow_many_times_is_bought(int how_many_times_is_bought) {
         this.how_many_times_is_bought = how_many_times_is_bought;
-    }
-
-    public boolean isOver() {
-        return isOver;
-    }
-
-    public void setIsOver(boolean isOver) {
-        this.isOver = isOver;
     }
 
     
