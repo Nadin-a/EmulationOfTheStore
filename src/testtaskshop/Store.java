@@ -31,6 +31,8 @@ public class Store implements TimeAndDateListener {
     private double profit;
     private double expenses;
 
+    private int current_markup;
+
     public Store() {
         this.money = 10000;
         this.profit = 0;
@@ -81,10 +83,11 @@ public class Store implements TimeAndDateListener {
         System.out.println("Пришло " + number_of_customers + " покупателей.");
         for (int i = 1; i <= number_of_customers; i++) {
             System.out.println("Покупатель " + i);
+            mark_up_for_each_drink(current_markup);
             buying_goods();
+
         }
     }
-
 
     /**
      * Customers purchase from 0 to 10 units of random goods.
@@ -99,40 +102,53 @@ public class Store implements TimeAndDateListener {
         System.out.println("Этот покупатель купил " + amount_of_goods + " товаров.");
         int[] indices_of_goods = new int[amount_of_goods];
         for (int j = 0; j < amount_of_goods; j++) {
-            buy_one_item(indices_of_goods, j);
+            int item = find_items_for_purchase(indices_of_goods, j);
+            sales_at_a_time(indices_of_goods);
+            one_purchase(item);
         }
-        sales_at_a_time(indices_of_goods);
+
+    }
+
+    /**
+     * Search items.
+     *
+     * @param indices_of_goods array of item`s ind.
+     * @return item`s index
+     */
+    private int find_items_for_purchase(int[] indices_of_goods, int j) {
+        int what_item = find_item();
+        indices_of_goods[j] = what_item;
+        return what_item;
     }
 
     /**
      * Purchase of one product.
      */
-    private void buy_one_item(int[] indices_of_goods, int j) {
-        int what_item = find_item();
-        indices_of_goods[j] = what_item;
-
-        int amount = drinkList.get(what_item).getAmount();
+    private void one_purchase(int what_item) {
+        Drink drink = drinkList.get(what_item);
+        int amount = drink.getAmount();
         amount--;
-        drinkList.get(what_item).setAmount(amount);
+        drink.setAmount(amount);
 
-        int how_much_is_sold = drinkList.get(what_item).getHow_much_is_sold();
+        int how_much_is_sold = drink.getHow_much_is_sold();
         how_much_is_sold++;
-        drinkList.get(what_item).setHow_much_is_sold(how_much_is_sold);
+        drink.setHow_much_is_sold(how_much_is_sold);
 
         calculate_profit(what_item);
 
-        System.out.println(" Продано: " + drinkList.get(what_item).getName()
+        System.out.println(" Продано: " + drink.getName()
                 + " по цене: "
-                + String.valueOf(new BigDecimal(drinkList.get(what_item).getCost_with_markup())
+                + String.valueOf(new BigDecimal(drink.getCost_with_markup())
                         .setScale(1, RoundingMode.UP))
-                + " с наценкой " + drinkList.get(what_item).getCurrent_markup()
-                + " и осталось: " + drinkList.get(what_item).getAmount());
+                + " с наценкой " + drink.getCurrent_markup()
+                + " и осталось: " + drink.getAmount());
     }
 
     private void calculate_profit(int what_item) {
-        this.money += drinkList.get(what_item).getCost_with_markup();
-        double mProfit = drinkList.get(what_item).getCost_with_markup()
-                - drinkList.get(what_item).getStandart_cost();
+        Drink drink = drinkList.get(what_item);
+        this.money += drink.getCost_with_markup();
+        double mProfit = drink.getCost_with_markup()
+                - drink.getStandart_cost();
         this.profit += mProfit;
     }
 
@@ -148,7 +164,7 @@ public class Store implements TimeAndDateListener {
                 for (int j = i + 1; j < indices_of_goods.length; j++) {
                     if (tmp == indices_of_goods[j]) {
                         mask[j] = true;
-                        drinkList.get(indices_of_goods[i]).mark_up(TWO_ITEMS_MARKUP);
+                        drinkList.get(indices_of_goods[j]).mark_up(TWO_ITEMS_MARKUP);
                     }
                 }
             }
@@ -162,10 +178,18 @@ public class Store implements TimeAndDateListener {
      */
     private int find_item() {
         int what_item = 0 + (int) (Math.random() * drinkList.size());
-        if (drinkList.get(what_item).getAmount() == 0) {
+        try {
+            if (drinkList.get(what_item).getAmount() == 0) {
+                return find_item();
+            } else {
+                return what_item;
+            }
+        } catch (StackOverflowError err) {
+            drinkList.forEach((d) -> {
+                after_sale_of_goods(d);
+            });
             return find_item();
-        } else {
-            return what_item;
+
         }
     }
 
@@ -203,7 +227,6 @@ public class Store implements TimeAndDateListener {
             int amount = drink.getAmount();
             amount += PURCHASE;
             drink.setAmount(amount);
-  
 
             int how_many_times_is_bought = drink.getHow_many_times_is_bought();
             how_many_times_is_bought += PURCHASE;
@@ -335,6 +358,7 @@ public class Store implements TimeAndDateListener {
         drinkList.forEach((d) -> {
             d.mark_up(markup);
         });
+        current_markup = markup;
     }
 
     @Override
