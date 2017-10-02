@@ -1,25 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package testtaskshop;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import javenue.csv.Csv;
 
 /**
- *
  * @author Nadina 
- * Выходной, скидка
+ * Main class.
  */
 public class Main {
 
@@ -27,39 +18,29 @@ public class Main {
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-
-        Shop shop = new Shop();
-        List<Drink> empList = new ArrayList<>();
-        Time month = new Time();
-        month.addTimeAndDateListener(shop);
+    public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
+        Store store = new Store();
+        List<Drink> drinkList = new ArrayList<>();
+        Time time = new Time();
+        time.addTimeAndDateListener(store);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(
                 "database.csv"))) {
-            readFile(reader, empList);
+            readFile(reader, drinkList);
             reader.close();
         }
 
-        shop.setEmpList(empList);
-        showData(empList);
-        month.start();
-
-        Csv.Writer writer = new Csv.Writer("databaseNew.csv").delimiter(',');
-        empList.forEach((d) -> {
-            String name = d.getName();
-            String standart_cost = String.valueOf(d.getStandart_cost());
-            String type = String.valueOf(d.type);
-            String volume = String.valueOf(d.getVolume());
-            String information = d.getInformation();
-            String count = String.valueOf(d.getCount());
-            writer.value(name).value(standart_cost).value(type)
-                    .value(volume).value(information).value(count).newLine();
-        });
-        writer.close();
-
+        store.setDrinkList(drinkList);
+        showData(drinkList);
+        time.start();
+       
     }
 
-    private static void readFile(BufferedReader reader, List<Drink> empList) throws IOException {
+    /**
+     * Read database from .csv file. List formation.
+     * @param drinkList  list of srinks from stock.
+     */
+    private static void readFile(BufferedReader reader, List<Drink> drinkList) throws IOException {
         String line;
         Scanner scanner;
         int index = 0;
@@ -92,7 +73,7 @@ public class Main {
                         break;
                     }
                     case 5: {
-                        drink.setCount(Integer.valueOf(data));
+                        drink.setAmount(Integer.valueOf(data));
                         break;
                     }
                     default: {
@@ -102,30 +83,18 @@ public class Main {
                 index++;
             }
             index = 0;
-            empList.add(drink);
+            drinkList.add(drink);
         }
 
     }
 
-    private static void showData(List<Drink> empList) {
-        empList.forEach((d) -> {
+    /**
+     * Show data from list.
+     */
+    private static void showData(List<Drink> drinkList) {
+        System.out.println("Имеющиеся товары: ");
+        drinkList.forEach((d) -> {
             System.out.println(d.toString());
         });
     }
-
 }
-
-/**
- * "Пиво Одесское Новое",13.25,BEER,0.5,4.3,120 "Красная
- * испанка",80.00,WINE,0.75,14,92 "Мартини
- * Биссе",95.00,LIQUEURS,205.00,1.0,13,12 "Два моря",195.00,WINE,0.75,12,0
- *
- * "Вода минеральная Хорошо",9.99,MINERAL_WATER,0.3,вода минеральная
- * лечебно-столовая,570 "Вода минеральная Хорошо",15.47,MINERAL_WATER,1.5,вода
- * минеральная лечебно-столовая,412 "Сок Богач
- * Грейпфрутовый",22.00,JUICES,0.95,вода сок грейпфрутовый концентрированный
- * фруктоза лимонная кислота,156 "Енерджи бум Плюс",24.15,OTHER_DRINKS,0.33,вода
- * лимонная кислота ароматизатор Яблоко Е-345 Е-120 Е-630 Е-632 краситель
- * Вишня,78
- *
- */

@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package testtaskshop;
 
 /**
- * @author Nadina
+ * @author Nadina Class for time. Hours, new day, new month. Start of work day,
+ * evening period and weekend. Class for the "Event Source" object.
  */
 public class Time extends Thread {
 
@@ -26,7 +22,6 @@ public class Time extends Thread {
     TimeAndDateEventArgs arg;
 
     private boolean first_day = true;
-    
 
     @Override
     public void run() {
@@ -34,11 +29,12 @@ public class Time extends Thread {
             arg = new TimeAndDateEventArgs();
             while (true) {
 
+                //Definition of the first day
                 if (arg.getDay() == 1 && first_day) {
                     tdl.nextDay(arg.getDay(), isWeekend);
                     first_day = false;
                 }
-            
+
                 Thread.sleep(INTERVAL_SEC_ONE_DAY);
 
                 one_hour();
@@ -54,12 +50,18 @@ public class Time extends Thread {
         }
     }
 
+    /**
+     * One hour passed.
+     */
     private void one_hour() {
         int oldHour = arg.getHour();
         oldHour++;
         arg.setHour(oldHour);
     }
 
+    /**
+     * One day passed.
+     */
     private void one_day(TimeAndDateListener tdl) {
         if (arg.getHour() % TWENTY_FOUR_HOURS == 0) {
             arg.setHour(0);
@@ -76,6 +78,9 @@ public class Time extends Thread {
         }
     }
 
+    /**
+     * One month passed.
+     */
     private void one_month(TimeAndDateListener tdl) {
         if (arg.getDay() % MONTH == 0) {
             arg.setDay(1);
@@ -88,24 +93,30 @@ public class Time extends Thread {
 
     private void weekend(TimeAndDateListener tdl) {
         if (arg.getDay() % 7 == 0) {
-            tdl.weekend(arg.getDay());
+            tdl.weekend();
             isWeekend = true;
         } else {
             isWeekend = false;
         }
     }
 
+    /**
+     * Working day started and ended.
+     */
     private void working_day(TimeAndDateListener tdl) {
         if (arg.getHour() >= START_OF_WORKING_DAY && arg.getHour() <= END_OF_WORKING_DAY) {
-            tdl.working_day(arg.getHour());
+            tdl.working_day(isWeekend);
         }
     }
 
+    /**
+     * Evening period started and ended.
+     */
     private void evening_period(TimeAndDateListener tdl) {
         if (arg.getHour() == START_OF_EVENING_PERIOD && !isWeekend) {
-            tdl.evening_period(true, arg.getHour());
+            tdl.evening_period(true);
         } else if (arg.getHour() == END_OF_EVENING_PERIOD && !isWeekend) {
-            tdl.evening_period(false, arg.getHour());
+            tdl.evening_period(false);
         }
     }
 
@@ -113,6 +124,9 @@ public class Time extends Thread {
         System.out.println("Hour: " + arg.getHour() + ":" + "00");
     }
 
+    /**
+     * Set listener.
+     */
     public void addTimeAndDateListener(TimeAndDateListener tdl) {
         this.tdl = tdl;
     }

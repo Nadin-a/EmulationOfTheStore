@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package testtaskshop;
 
 /**
  *
- * @author Nadina
- *
+ * @author Nadina Class for non-alcoholic and alcoholic beverages. Fields
+ * "composition" and "strength of the drink" are combined in the "information"
+ * field.
  */
 enum Type {
     WINE, SPIRITS, BEER, LIQUEURS, MINERAL_WATER, JUICES, OTHER_DRINKS
@@ -22,26 +18,19 @@ class Drink {
     public Type type = Type.OTHER_DRINKS;
     private float volume;
     private String information;
-    private int count;
+    private int amount;
     private int current_markup;
     private int how_much_is_sold;
     private int how_many_times_is_bought;
+    private boolean isOver = false;
 
-    Drink() {
-
-    }
-
-    public Drink(String name, double standart_cost, double cost_with_markup,
-            float volume, String information, int count, int current_markup) {
-        this.name = name;
-        this.standart_cost = standart_cost;
-        this.cost_with_markup = cost_with_markup;
-        this.volume = volume;
-        this.information = information;
-        this.count = count;
-        this.current_markup = current_markup;
+    public Drink() {
         this.how_much_is_sold = 0;
-        this.how_many_times_is_bought = count;
+        this.how_many_times_is_bought = amount;
+        if(this.amount == 0)
+        {
+            isOver = true;
+        }
     }
 
     public String getName() {
@@ -92,12 +81,12 @@ class Drink {
         this.information = information;
     }
 
-    public int getCount() {
-        return count;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public int getCurrent_markup() {
@@ -124,6 +113,19 @@ class Drink {
         this.how_many_times_is_bought = how_many_times_is_bought;
     }
 
+    public boolean isOver() {
+        return isOver;
+    }
+
+    public void setIsOver(boolean isOver) {
+        this.isOver = isOver;
+    }
+
+    
+    
+    /**
+     * Calculation cost with markup 
+     */
     public void mark_up(int markup) {
         this.current_markup = markup;
         double percent = this.getStandart_cost() / 100 * markup;
@@ -133,7 +135,7 @@ class Drink {
 
     @Override
     public String toString() {
-        return "Drink{" + "name=" + name + ", standart_cost=" + standart_cost + ", cost_with_markup=" + cost_with_markup + ", type=" + type + ", volume=" + volume + ", information=" + information + ", count=" + count + ", current_markup=" + current_markup + ", how_much_is_sold=" + how_much_is_sold + ", how_many_times_is_bought=" + how_many_times_is_bought + '}';
+        return "Drink{" + "name=" + name + ", standart_cost=" + standart_cost + ", cost_with_markup=" + cost_with_markup + ", type=" + type + ", volume=" + volume + ", information=" + information + ", amount=" + amount + ", current_markup=" + current_markup + ", how_much_is_sold=" + how_much_is_sold + ", how_many_times_is_bought=" + how_many_times_is_bought + '}';
     }
 
 }
