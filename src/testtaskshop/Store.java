@@ -20,7 +20,7 @@ public class Store implements TimeAndDateListener {
     private static final int WEEKEND_MARKUP = 15;
     private static final int TWO_ITEMS_MARKUP = 7;
 
-    private static final int MINIMUM_QUANTITY_OF_GOODS = 30;
+    private static final int MINIMUM_QUANTITY_OF_GOODS = 10;
     private static final int PURCHASE = 150;
 
     private List<Drink> drinkList;
