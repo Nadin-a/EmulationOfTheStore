@@ -76,23 +76,14 @@ public class Store implements TimeAndDateListener {
      *
      */
     @Override
-    public void working_day(boolean isWeekend) {
+    public void working_day() {
 
         checkAvailability();
         int number_of_customers = 1 + (int) (Math.random() * 10);
         System.out.println("Пришло " + number_of_customers + " покупателей.");
         for (int i = 1; i <= number_of_customers; i++) {
-            checkIsWeekend(isWeekend);
             System.out.println("Покупатель " + i);
             buying_goods();
-        }
-    }
-
-    private void checkIsWeekend(boolean isWeekend) {
-        if (isWeekend) {
-            mark_up_for_each_drink(WEEKEND_MARKUP);
-        } else {
-            mark_up_for_each_drink(STANDART_MARKUP);
         }
     }
 
@@ -128,9 +119,8 @@ public class Store implements TimeAndDateListener {
         int[] indices_of_goods = new int[amount_of_goods];
         for (int j = 0; j < amount_of_goods; j++) {
             buy_one_item(indices_of_goods, j);
-            sales_at_a_time(indices_of_goods);
         }
-
+        sales_at_a_time(indices_of_goods);
     }
 
     /**

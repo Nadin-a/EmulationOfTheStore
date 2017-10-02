@@ -105,7 +105,7 @@ public class Time extends Thread {
      */
     private void working_day(TimeAndDateListener tdl) {
         if (arg.getHour() >= START_OF_WORKING_DAY && arg.getHour() <= END_OF_WORKING_DAY) {
-            tdl.working_day(isWeekend);
+            tdl.working_day();
         }
     }
 

@@ -8,7 +8,7 @@ package testtaskshop;
  * убрать инты h
  */
 public interface TimeAndDateListener {
-    void working_day(boolean isWeekend);
+    void working_day();
     void evening_period(boolean isEvening);
     void nextDay(int day, boolean isWeekend);
     void nextMonth(int arg);
