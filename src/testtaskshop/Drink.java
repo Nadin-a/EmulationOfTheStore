@@ -27,10 +27,6 @@ class Drink {
     public Drink() {
         this.how_much_is_sold = 0;
         this.how_many_times_is_bought = amount;
-        if(this.amount == 0)
-        {
-            isOver = true;
-        }
     }
 
     public String getName() {
