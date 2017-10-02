@@ -189,7 +189,6 @@ public class Store implements TimeAndDateListener {
                 after_sale_of_goods(d);
             });
             return find_item();
-
         }
     }
 
@@ -263,8 +262,11 @@ public class Store implements TimeAndDateListener {
      * On weekends the markup is 15% of the purchase price
      */
     @Override
-    public void weekend() {
+    public void weekend(int hour) {
         mark_up_for_each_drink(WEEKEND_MARKUP);
+         if (hour >= Time.START_OF_EVENING_PERIOD && hour <= Time.END_OF_EVENING_PERIOD) {
+             mark_up_for_each_drink(EVENING_MARKUP);
+         }
     }
 
     /**

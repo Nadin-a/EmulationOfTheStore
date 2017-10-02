@@ -9,8 +9,8 @@ public class Time extends Thread {
     private static final int INTERVAL_SEC_ONE_DAY = 100;
     private static final int START_OF_WORKING_DAY = 8;
     private static final int END_OF_WORKING_DAY = 21;
-    private static final int START_OF_EVENING_PERIOD = 18;
-    private static final int END_OF_EVENING_PERIOD = 20;
+    public static final int START_OF_EVENING_PERIOD = 18;
+    public static final int END_OF_EVENING_PERIOD = 20;
     private static final int AFTER_PURCHASE = 22;
     private final static int TWENTY_FOUR_HOURS = 24;
     private final static int MONTH = 30;
@@ -93,7 +93,7 @@ public class Time extends Thread {
 
     private void weekend(TimeAndDateListener tdl) {
         if (arg.getDay() % 7 == 0) {
-            tdl.weekend();
+            tdl.weekend(arg.getHour());
             isWeekend = true;
         } else {
             isWeekend = false;
@@ -113,9 +113,9 @@ public class Time extends Thread {
      * Evening period started and ended.
      */
     private void evening_period(TimeAndDateListener tdl) {
-        if (arg.getHour() == START_OF_EVENING_PERIOD && !isWeekend) {
+        if (arg.getHour() == START_OF_EVENING_PERIOD) {
             tdl.evening_period(true);
-        } else if (arg.getHour() == END_OF_EVENING_PERIOD && !isWeekend) {
+        } else if (arg.getHour() == END_OF_EVENING_PERIOD) {
             tdl.evening_period(false);
         }
     }
